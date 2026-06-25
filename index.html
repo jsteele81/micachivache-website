@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiCachivache — Home Goods & Smart Living</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --night: #1A1A2E;
+    --saffron: #E8C547;
+    --cream: #F5F0E8;
+    --terra: #C4472A;
+    --olive: #4A7C59;
+    --night-mid: #2A2A42;
+    --cream-dark: #E8E3D8;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--night);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    transition: background 0.4s, backdrop-filter 0.4s;
+  }
+
+  nav.scrolled {
+    background: rgba(245, 240, 232, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(26,26,46,0.08);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--night);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+
+  .nav-logo span { color: var(--terra); }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--night);
+    text-decoration: none;
+    opacity: 0.65;
+    transition: opacity 0.2s;
+  }
+
+  .nav-links a:hover { opacity: 1; }
+
+  .nav-cta {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--night) !important;
+    opacity: 1 !important;
+    border: 1.5px solid var(--night);
+    padding: 0.5rem 1.25rem;
+    border-radius: 2rem;
+    transition: background 0.2s, color 0.2s !important;
+  }
+
+  .nav-cta:hover {
+    background: var(--night) !important;
+    color: var(--cream) !important;
+    opacity: 1 !important;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: var(--night);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 8rem 2.5rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    bottom: -2rem;
+    right: -1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(8rem, 18vw, 22rem);
+    font-weight: 700;
+    color: rgba(255,255,255,0.025);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--saffron);
+    margin-bottom: 1.75rem;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.7s ease forwards 0.2s;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 8vw, 7.5rem);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--cream);
+    margin-bottom: 1.75rem;
+    max-width: 14ch;
+  }
+
+  .hero-title .mi {
+    color: var(--terra);
+    opacity: 0;
+    display: inline-block;
+    transform: translateX(-20px);
+    animation: slideRight 0.8s cubic-bezier(0.16,1,0.3,1) forwards 0.5s;
+  }
+
+  .hero-title .cachivache {
+    color: var(--saffron);
+    opacity: 0;
+    display: inline-block;
+    transform: translateX(-20px);
+    animation: slideRight 0.8s cubic-bezier(0.16,1,0.3,1) forwards 0.8s;
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.65);
+    max-width: 44ch;
+    margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.7s ease forwards 1.1s;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.7s ease forwards 1.3s;
+  }
+
+  .btn-primary {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--night);
+    background: var(--saffron);
+    border: none;
+    padding: 0.85rem 2rem;
+    border-radius: 2rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.2s, background 0.2s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: #f0ce55;
+    transform: translateY(-2px);
+  }
+
+  .btn-ghost {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: rgba(245,240,232,0.75);
+    background: transparent;
+    border: 1.5px solid rgba(245,240,232,0.25);
+    padding: 0.85rem 2rem;
+    border-radius: 2rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
+  }
+
+  .btn-ghost:hover {
+    border-color: rgba(245,240,232,0.6);
+    color: var(--cream);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 1.8s;
+  }
+
+  .hero-scroll span {
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.3);
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(245,240,232,0.3), transparent);
+    animation: scrollPulse 2s ease-in-out infinite 2s;
+  }
+
+  /* ── ABOUT ── */
+  .about {
+    padding: 7rem 2.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .about-left {}
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--terra);
+    margin-bottom: 1.25rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--night);
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title em {
+    color: var(--terra);
+    font-style: italic;
+  }
+
+  .about-body {
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.8;
+    color: rgba(26,26,46,0.7);
+    margin-bottom: 1.25rem;
+  }
+
+  .about-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-top: 1rem;
+  }
+
+  .value-card {
+    background: white;
+    border: 1px solid rgba(26,26,46,0.07);
+    border-radius: 1rem;
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+
+  .value-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(26,26,46,0.08);
+  }
+
+  .value-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.2rem;
+  }
+
+  .icon-saffron { background: rgba(232,197,71,0.15); }
+  .icon-terra { background: rgba(196,71,42,0.12); }
+  .icon-olive { background: rgba(74,124,89,0.12); }
+
+  .value-card h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--night);
+    margin-bottom: 0.3rem;
+  }
+
+  .value-card p {
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: rgba(26,26,46,0.6);
+  }
+
+  /* ── WHAT WE SOURCE ── */
+  .categories {
+    background: var(--night);
+    padding: 7rem 2.5rem;
+  }
+
+  .categories-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .categories-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .categories-header .section-label {
+    color: var(--saffron);
+  }
+
+  .categories-header .section-title {
+    color: var(--cream);
+  }
+
+  .categories-header .section-title em {
+    color: var(--saffron);
+  }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .cat-card {
+    border: 1px solid rgba(245,240,232,0.1);
+    border-radius: 1.25rem;
+    padding: 2.5rem 2rem;
+    transition: border-color 0.3s, background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--saffron);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .cat-card:hover {
+    border-color: rgba(245,240,232,0.2);
+    background: rgba(245,240,232,0.04);
+  }
+
+  .cat-card:hover::before { transform: scaleX(1); }
+
+  .cat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: rgba(245,240,232,0.08);
+    line-height: 1;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .cat-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 0.75rem;
+  }
+
+  .cat-desc {
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.5);
+  }
+
+  .cat-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1.25rem;
+  }
+
+  .cat-tag {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.7rem;
+    border-radius: 1rem;
+    background: rgba(232,197,71,0.1);
+    color: var(--saffron);
+    border: 1px solid rgba(232,197,71,0.2);
+  }
+
+  /* ── SUPPLIER SECTION ── */
+  .suppliers {
+    padding: 7rem 2.5rem;
+    background: var(--cream-dark);
+  }
+
+  .suppliers-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .suppliers-left .section-title { margin-bottom: 1.25rem; }
+
+  .suppliers-body {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(26,26,46,0.65);
+    margin-bottom: 2rem;
+  }
+
+  .business-details {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.75rem;
+    border: 1px solid rgba(26,26,46,0.07);
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(26,26,46,0.06);
+    font-size: 0.875rem;
+  }
+
+  .detail-row:last-child { border-bottom: none; }
+
+  .detail-label {
+    font-weight: 500;
+    color: rgba(26,26,46,0.5);
+    letter-spacing: 0.02em;
+  }
+
+  .detail-value {
+    font-weight: 600;
+    color: var(--night);
+    text-align: right;
+  }
+
+  .detail-value a {
+    color: var(--terra);
+    text-decoration: none;
+  }
+
+  .detail-value a:hover { text-decoration: underline; }
+
+  .suppliers-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid rgba(26,26,46,0.07);
+  }
+
+  .trust-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--olive);
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .trust-item h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--night);
+    margin-bottom: 0.2rem;
+  }
+
+  .trust-item p {
+    font-size: 0.825rem;
+    line-height: 1.6;
+    color: rgba(26,26,46,0.55);
+  }
+
+  /* ── CONTACT ── */
+  .contact {
+    background: var(--night);
+    padding: 7rem 2.5rem;
+    text-align: center;
+  }
+
+  .contact-inner {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .contact .section-label { color: var(--saffron); }
+  .contact .section-title { color: var(--cream); margin-bottom: 1.25rem; }
+
+  .contact-body {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(245,240,232,0.55);
+    margin-bottom: 2.5rem;
+  }
+
+  .contact-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--saffron);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(232,197,71,0.3);
+    padding-bottom: 0.25rem;
+    transition: border-color 0.2s;
+  }
+
+  .contact-email:hover { border-color: var(--saffron); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--night);
+    border-top: 1px solid rgba(245,240,232,0.07);
+    padding: 2rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--cream);
+    text-decoration: none;
+  }
+
+  .footer-logo span { color: var(--terra); }
+
+  .footer-copy {
+    font-size: 0.8rem;
+    color: rgba(245,240,232,0.3);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-links a {
+    font-size: 0.8rem;
+    color: rgba(245,240,232,0.4);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--cream); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideRight {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 0.7; transform: scaleY(1.2); }
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .about { grid-template-columns: 1fr; gap: 3rem; }
+    .cat-grid { grid-template-columns: 1fr; }
+    .suppliers-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .nav-links { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 7rem 1.5rem 4rem; }
+    .about, .categories, .suppliers, .contact { padding: 5rem 1.5rem; }
+    footer { padding: 1.5rem; flex-direction: column; text-align: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .hero-title .mi, .hero-title .cachivache, .hero-eyebrow, .hero-sub, .hero-actions, .hero-scroll {
+      opacity: 1; transform: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo"><span>Mi</span>Cachivache</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#categories">What We Source</a></li>
+    <li><a href="#suppliers">For Suppliers</a></li>
+    <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text" aria-hidden="true">MC</div>
+  <p class="hero-eyebrow">Home Goods &amp; Smart Living</p>
+  <h1 class="hero-title">
+    <span class="mi">Mi</span><span class="cachivache">Cachivache</span>
+  </h1>
+  <p class="hero-sub">
+    Sourcing well-made, practical products that make everyday life a little bit better — and a little bit more fun.
+  </p>
+  <div class="hero-actions">
+    <a href="#about" class="btn-primary">Our Story</a>
+    <a href="#suppliers" class="btn-ghost">Supplier Information</a>
+  </div>
+  <div class="hero-scroll" aria-hidden="true">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-left">
+    <p class="section-label reveal">Who We Are</p>
+    <h2 class="section-title reveal reveal-delay-1">
+      Good things, <em>carefully</em> chosen.
+    </h2>
+    <p class="about-body reveal reveal-delay-2">
+      MiCachivache is an independent product brand built around a simple idea: people deserve well-made, practical things that actually work — without paying a premium for a logo.
+    </p>
+    <p class="about-body reveal reveal-delay-2">
+      We source smart home and everyday living products from trusted manufacturers, sell directly through Amazon, and obsess over the details that most sellers overlook — quality control, honest listings, and products that do exactly what they say.
+    </p>
+    <p class="about-body reveal reveal-delay-3">
+      The name means "knick-knack" in Spanish. We wear that proudly.
+    </p>
+  </div>
+  <div class="about-right">
+    <div class="value-card reveal reveal-delay-1">
+      <div class="value-icon icon-saffron">🔍</div>
+      <div>
+        <h3>Selective Sourcing</h3>
+        <p>Every product is physically tested before it goes to a customer. We order samples, we break things, and we only move forward when we're genuinely impressed.</p>
+      </div>
+    </div>
+    <div class="value-card reveal reveal-delay-2">
+      <div class="value-icon icon-terra">📋</div>
+      <div>
+        <h3>Compliance First</h3>
+        <p>CE marking, RoHS compliance, EU energy standards — we verify every certificate before a listing goes live. No shortcuts on safety.</p>
+      </div>
+    </div>
+    <div class="value-card reveal reveal-delay-3">
+      <div class="value-icon icon-olive">🤝</div>
+      <div>
+        <h3>Long-term Partnerships</h3>
+        <p>We're not one-order buyers. We work with a small number of trusted suppliers, order consistently, and build real relationships.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="categories" id="categories">
+  <div class="categories-inner">
+    <div class="categories-header">
+      <p class="section-label reveal">What We Source</p>
+      <h2 class="section-title reveal reveal-delay-1">Three categories, <em>done right.</em></h2>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card reveal reveal-delay-1">
+        <span class="cat-number" aria-hidden="true">01</span>
+        <h3 class="cat-title">Smart Home Energy</h3>
+        <p class="cat-desc">Products that help households reduce energy consumption. Practical, CE-certified, and compatible with major smart home platforms.</p>
+        <div class="cat-tags">
+          <span class="cat-tag">Smart Plugs</span>
+          <span class="cat-tag">Energy Monitors</span>
+          <span class="cat-tag">Smart Thermostats</span>
+          <span class="cat-tag">LED Lighting</span>
+        </div>
+      </div>
+      <div class="cat-card reveal reveal-delay-2">
+        <span class="cat-number" aria-hidden="true">02</span>
+        <h3 class="cat-title">Home Storage & Organisation</h3>
+        <p class="cat-desc">Space-saving solutions for modern homes. Products people actually use every day — not one-time purchases that end up in a drawer.</p>
+        <div class="cat-tags">
+          <span class="cat-tag">Vacuum Storage</span>
+          <span class="cat-tag">Organisers</span>
+          <span class="cat-tag">Compression Bags</span>
+          <span class="cat-tag">Space Savers</span>
+        </div>
+      </div>
+      <div class="cat-card reveal reveal-delay-3">
+        <span class="cat-number" aria-hidden="true">03</span>
+        <h3 class="cat-title">Remote Work Accessories</h3>
+        <p class="cat-desc">The home office is permanent now. We source the tools that make working from home genuinely better — ergonomic, reliable, and well-designed.</p>
+        <div class="cat-tags">
+          <span class="cat-tag">Laptop Stands</span>
+          <span class="cat-tag">USB-C Hubs</span>
+          <span class="cat-tag">Desk Fans</span>
+          <span class="cat-tag">Webcams</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPLIERS -->
+<section class="suppliers" id="suppliers">
+  <div class="suppliers-inner">
+    <div class="suppliers-left">
+      <p class="section-label reveal">For Suppliers</p>
+      <h2 class="section-title reveal reveal-delay-1">Working with <em>MiCachivache.</em></h2>
+      <p class="suppliers-body reveal reveal-delay-2">
+        We are an Amazon FBA seller sourcing products for the US and European markets. We place regular orders, pay promptly via Trade Assurance, and work with a small number of trusted suppliers on an ongoing basis.
+      </p>
+      <div class="business-details reveal reveal-delay-3">
+        <div class="detail-row">
+          <span class="detail-label">Company</span>
+          <span class="detail-value">MiCachivache</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Markets</span>
+          <span class="detail-value">United States &amp; Spain (EU)</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Platform</span>
+          <span class="detail-value">Amazon FBA (US + ES)</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Payment</span>
+          <span class="detail-value">Alibaba Trade Assurance</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Order size</span>
+          <span class="detail-value">40–200 units per SKU</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Website</span>
+          <span class="detail-value"><a href="https://micachivache.com">micachivache.com</a></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Contact</span>
+          <span class="detail-value"><a href="mailto:hello@micachivache.com">hello@micachivache.com</a></span>
+        </div>
+      </div>
+    </div>
+    <div class="suppliers-right">
+      <div class="trust-item reveal reveal-delay-1">
+        <div class="trust-dot"></div>
+        <div>
+          <h4>Samples before bulk orders</h4>
+          <p>We always order and test samples before placing a production order. We take quality seriously and expect the bulk order to match.</p>
+        </div>
+      </div>
+      <div class="trust-item reveal reveal-delay-2">
+        <div class="trust-dot"></div>
+        <div>
+          <h4>CE &amp; compliance documentation required</h4>
+          <p>For all electrical products we require valid CE and RoHS certificates in PDF form before proceeding. This is non-negotiable for our markets.</p>
+        </div>
+      </div>
+      <div class="trust-item reveal reveal-delay-3">
+        <div class="trust-dot"></div>
+        <div>
+          <h4>Direct to Amazon FBA warehouse</h4>
+          <p>We ship directly from your factory to Amazon's fulfilment centres in the US and Spain. We will provide the exact warehouse address and FNSKU label requirements.</p>
+        </div>
+      </div>
+      <div class="trust-item reveal reveal-delay-3">
+        <div class="trust-dot"></div>
+        <div>
+          <h4>Repeat business for good partners</h4>
+          <p>We are not a one-order buyer. If a product performs well, we reorder consistently and grow the relationship over time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <p class="section-label reveal">Get in Touch</p>
+    <h2 class="section-title reveal reveal-delay-1">Let's talk.</h2>
+    <p class="contact-body reveal reveal-delay-2">
+      Whether you're a supplier with a product that fits our categories, or you have a question about MiCachivache — we'd love to hear from you.
+    </p>
+    <a href="mailto:hello@micachivache.com" class="contact-email reveal reveal-delay-3">
+      hello@micachivache.com →
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo"><span>Mi</span>Cachivache</a>
+  <p class="footer-copy">© 2026 MiCachivache. All rights reserved.</p>
+  <div class="footer-links">
+    <a href="#about">About</a>
+    <a href="#suppliers">Suppliers</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
